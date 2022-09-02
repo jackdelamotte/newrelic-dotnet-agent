@@ -24,10 +24,6 @@ jobs:
           fetch-depth: 0
 
       - name: Check for updates to core technology packages
-        run: |
-            ls
-            cd  ${{ env.scan-tool-path }}
-            ls
-            dotnet run
+        run: dotnet run --project ${{ env.scan-tool-path }}
 
            
