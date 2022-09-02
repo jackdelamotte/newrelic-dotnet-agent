@@ -15,7 +15,7 @@ jobs:
     continue-on-error: false
     
     env:
-      scan-tool-path: .github/workflows/scripts/nugetSlackNotifications
+      scan-tool-path: ${{ github.workspace }}/.github/workflows/scripts/nugetSlackNotifications
 
     steps:
       - name: Checkout
@@ -25,7 +25,9 @@ jobs:
 
       - name: Check for updates to core technology packages
         run: |
-            cd ${{ env.scan-tool-path }}
             ls
-            dotnet run 
+            cd scan-tool-path
+            ls
+            dotnet run
+
            
