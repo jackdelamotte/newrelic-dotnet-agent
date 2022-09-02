@@ -12,12 +12,9 @@ namespace nugetSlackNotifications
     {
         private static readonly HttpClient client = new();
 
-        private static string[] coreTechPackages = new string[] { "system.data.sqlclient", "microsoft.data.sqlclient", "mongocsharpdriver", "mongodb.driver", "mysql.data", "mysqlconnector", "stackexchange.redis", "rabbitmq.client", "microsoft.net.http", "restsharp", "serilog" };
-
         static async Task Main(string[] args)
         {
             List<Tuple<string, string>> newVersions = new();
-            Console.WriteLine(args);
 
             foreach (string package in args)
             {
