@@ -54,6 +54,7 @@ namespace nugetSlackNotifications
                 Encoding.UTF8,
                 "application/json");
 
+            Console.WriteLine(Environment.GetEnvironmentVariable("SLACK_NUGET_NOTIFICATIONS_WEBHOOK"));
             await client.PostAsync(Environment.GetEnvironmentVariable("SLACK_NUGET_NOTIFICATIONS_WEBHOOK"), jsonContent);
 
         }
