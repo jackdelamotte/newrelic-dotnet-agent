@@ -48,28 +48,28 @@ namespace nugetSlackNotifications
     public class SearchResult
     {
         public int count { get; set; }
-        public Item[] items { get; set; }
+        public Item?[] items { get; set; }
     }
 
     public class Item
     {
         public DateTime commitTimeStamp { get; set; }
         public int count { get; set; }
-        public Release[] items { get; set; }
+        public Release[]? items { get; set; }
         // some packages like MySqlConnector and Serilog return json that will have this and not items
-        public string upper { get; set; }
+        public string? upper { get; set; }
     }
 
     public class Release
     {
-        public string id { get; set; }
-        public Catalogentry catalogEntry { get; set; }
+        public string? id { get; set; }
+        public Catalogentry? catalogEntry { get; set; }
     }
 
     public class Catalogentry
     {
-        public string id { get; set; }
+        public string? id { get; set; }
         public DateTime published { get; set; }
-        public string version { get; set; }
+        public string? version { get; set; }
     }
 }
