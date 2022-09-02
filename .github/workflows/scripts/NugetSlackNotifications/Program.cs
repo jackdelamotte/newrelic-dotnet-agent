@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -41,6 +42,20 @@ namespace nugetSlackNotifications
 
             foreach (var t in newVersions)
                 Console.WriteLine($"{t.Item1}: {t.Item2}");
+
+            StringContent jsonContent = new(
+                JsonSerializer.Serialize(new
+                {
+                    userId = 77,
+                    id = 1,
+                    title = "write code sample",
+                    completed = false
+                }),
+                Encoding.UTF8,
+                "application/json");
+
+            await client.PostAsync(Environment.GetEnvironmentVariable("SLACK_NUGET_NOTIFICATIONS_WEBHOOK"), jsonContent);
+
         }
 
 
