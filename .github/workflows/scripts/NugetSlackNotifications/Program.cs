@@ -17,6 +17,7 @@ namespace nugetSlackNotifications
         static async Task Main(string[] args)
         {
             List<Tuple<string, string>> newVersions = new();
+            Console.WriteLine(args);
 
             foreach (string package in coreTechPackages)
             {

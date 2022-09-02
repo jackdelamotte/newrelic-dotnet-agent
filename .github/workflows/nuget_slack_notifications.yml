@@ -24,6 +24,18 @@ jobs:
           fetch-depth: 0
 
       - name: Check for updates to core technology packages
-        run: dotnet run --project ${{ env.scan-tool-path }}
-
+        run: dotnet run --project ${{ env.scan-tool-path }} ${{ env.nugets }}
+        env:
+            nugets:
+                 "system.data.sqlclient
+                 microsoft.data.sqlclient
+                 mongocsharpdriver
+                 mongodb.driver
+                 mysql.data
+                 mysqlconnector
+                 stackexchange.redis
+                 rabbitmq.client
+                 microsoft.net.http
+                 restsharp
+                 serilog"
            
