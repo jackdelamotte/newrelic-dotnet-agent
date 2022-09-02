@@ -25,6 +25,7 @@ jobs:
 
       - name: Check for updates to core technology packages
         run: |
+            cd ${{ env.scan-tool-path }}
             ls
-            dotnet run --project ${{ env.scan-tool-path }}
+            dotnet run 
            
