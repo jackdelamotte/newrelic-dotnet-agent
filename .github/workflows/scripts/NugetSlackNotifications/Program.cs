@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
+
+#pragma warning disable CS8618
 
 namespace nugetSlackNotifications
 {
@@ -73,3 +73,5 @@ namespace nugetSlackNotifications
         public string version { get; set; }
     }
 }
+
+#pragma warning restore CS8618
