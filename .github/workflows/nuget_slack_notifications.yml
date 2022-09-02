@@ -15,7 +15,7 @@ jobs:
     continue-on-error: false
     
     env:
-      scan-tool-path: ${{ github.workspace }}/.github/workflows/scripts/nugetSlackNotifications
+      scan-tool-path: ${{ github.workspace }}/.github/workflows/scripts/NugetSlackNotifications
 
     steps:
       - name: Checkout
