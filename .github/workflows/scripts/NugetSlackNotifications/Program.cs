@@ -19,7 +19,7 @@ namespace nugetSlackNotifications
             List<Tuple<string, string>> newVersions = new();
             Console.WriteLine(args);
 
-            foreach (string package in coreTechPackages)
+            foreach (string package in args)
             {
                 string response = await client.GetStringAsync($"https://api.nuget.org/v3/registration5-semver1/{package}/index.json");
 
