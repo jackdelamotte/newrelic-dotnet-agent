@@ -24,9 +24,9 @@ jobs:
           fetch-depth: 0
 
       - name: Check for updates to core technology packages
-        run: dotnet run --project ${{ env.scan-tool-path }} ${{ env.nugets }} ${{ secrets.SLACK_NUGET_NOTIFICATIONS_WEBHOOK }}
+        run: dotnet run --project ${{ env.scan-tool-path }} ${{ env.nugets }}
         env:
-            SLACK_NUGET_NOTIFICATIONS_WEBHOOK: ${{ secrets.SLACK_NUGET_NOTIFICATIONS_WEBHOOK }}
+            webhook: ${{ secrets.SLACK_NUGET_NOTIFICATIONS_WEBHOOK }}
             nugets:
                  "system.data.sqlclient
                  microsoft.data.sqlclient
@@ -38,7 +38,6 @@ jobs:
                  rabbitmq.client
                  microsoft.net.http
                  restsharp
-                 serilog
-                 ${{ secrets.SLACK_NUGET_NOTIFICATIONS_WEBHOOK }}"
+                 serilog"
 
            
