@@ -17,9 +17,9 @@ namespace nugetSlackNotifications
         {
             List<Tuple<string, string>> newVersions = new();
 
-            for (int i = 0; i < args.Length - 1; i++)
+            foreach (string package in args)
             {
-                string response = await client.GetStringAsync($"https://api.nuget.org/v3/registration5-semver1/{args[i]}/index.json");
+                string response = await client.GetStringAsync($"https://api.nuget.org/v3/registration5-semver1/{package}/index.json");
 
                 SearchResult? searchResult = JsonSerializer.Deserialize<SearchResult>(response);
                 if (searchResult is null) continue;
@@ -29,13 +29,13 @@ namespace nugetSlackNotifications
                     if (item.items is not null)
                     {
                         Catalogentry latestCatalogEntry = item.items[^1].catalogEntry;
-                        if (latestCatalogEntry.published > DateTime.Now.AddDays(-10))
+                        if (latestCatalogEntry.published > DateTime.Now.AddDays(-1))
                             newVersions.Add(new Tuple<string, string>(latestCatalogEntry.id, latestCatalogEntry.version));
                     }
                     else // if item.items is null the json structure is weird and we have to use different properties
                     {
-                        if (item.commitTimeStamp > DateTime.Now.AddDays(-10))
-                            newVersions.Add(new Tuple<string, string>(args[i], item.upper));
+                        if (item.commitTimeStamp > DateTime.Now.AddDays(-1))
+                            newVersions.Add(new Tuple<string, string>(package, item.upper));
                     }
                 }
             }
@@ -53,9 +53,6 @@ namespace nugetSlackNotifications
                 Encoding.UTF8,
                 "application/json");
 
-            // Environment.GetEnvironmentVariable("SLACK_NUGET_NOTIFICATIONS_WEBHOOK")
-            Console.WriteLine(Environment.GetEnvironmentVariable("webhook"));
-            Console.WriteLine(Environment.GetEnvironmentVariable("test"));
             await client.PostAsync(Environment.GetEnvironmentVariable("webhook"), jsonContent);
 
         }
