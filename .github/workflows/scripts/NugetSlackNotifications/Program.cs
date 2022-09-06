@@ -55,6 +55,7 @@ namespace nugetSlackNotifications
 
             // Environment.GetEnvironmentVariable("SLACK_NUGET_NOTIFICATIONS_WEBHOOK")
             Console.WriteLine(Environment.GetEnvironmentVariable("webhook"));
+            Console.WriteLine(Environment.GetEnvironmentVariable("test"));
             await client.PostAsync(Environment.GetEnvironmentVariable("webhook"), jsonContent);
 
         }
