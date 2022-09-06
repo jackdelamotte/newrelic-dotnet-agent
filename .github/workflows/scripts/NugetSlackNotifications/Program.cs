@@ -35,7 +35,7 @@ namespace nugetSlackNotifications
                     else // if item.items is null the json structure is weird and we have to use different properties
                     {
                         if (item.commitTimeStamp > DateTime.Now.AddDays(-10))
-                            newVersions.Add(new Tuple<string, string>(package, item.upper));
+                            newVersions.Add(new Tuple<string, string>(args[i], item.upper));
                     }
                 }
             }
