@@ -17,9 +17,9 @@ namespace nugetSlackNotifications
         {
             List<Tuple<string, string>> newVersions = new();
 
-            foreach (string package in args)
+            for (int i = 0; i < args.Length - 1; i++)
             {
-                string response = await client.GetStringAsync($"https://api.nuget.org/v3/registration5-semver1/{package}/index.json");
+                string response = await client.GetStringAsync($"https://api.nuget.org/v3/registration5-semver1/{args[i]}/index.json");
 
                 SearchResult? searchResult = JsonSerializer.Deserialize<SearchResult>(response);
                 if (searchResult is null) continue;
@@ -54,7 +54,7 @@ namespace nugetSlackNotifications
                 "application/json");
 
             // Environment.GetEnvironmentVariable("SLACK_NUGET_NOTIFICATIONS_WEBHOOK")
-            await client.PostAsync(Environment.GetEnvironmentVariable("SLACK_NUGET_NOTIFICATIONS_WEBHOOK"), jsonContent);
+            await client.PostAsync(args[^1], jsonContent);
 
         }
     }
