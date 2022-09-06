@@ -40,27 +40,25 @@ namespace nugetSlackNotifications
                 }
             }
 
+            string msg = "Hi team! Dotty here :technologist::pager:\nThere's some new NuGet releases you should know about :arrow_heading_down::sparkles:";
             foreach (var t in newVersions)
-                Console.WriteLine($"{t.Item1}: {t.Item2}");
+                msg += $"\n\t:package: {char.ToUpper(t.Item1[0]) + t.Item1.Substring(1)} version {t.Item2}";
+            msg += $"\nThanks and have a wonderful {DateTime.Now.DayOfWeek}.";
 
             StringContent jsonContent = new(
                 JsonSerializer.Serialize(new
                 {
-                    userId = 77,
-                    id = 1,
-                    title = "write code sample",
-                    completed = false
+                    text = msg
                 }),
                 Encoding.UTF8,
                 "application/json");
 
-            Console.WriteLine(Environment.GetEnvironmentVariable("SLACK_NUGET_NOTIFICATIONS_WEBHOOK"));
+            // Environment.GetEnvironmentVariable("SLACK_NUGET_NOTIFICATIONS_WEBHOOK")
             await client.PostAsync(Environment.GetEnvironmentVariable("SLACK_NUGET_NOTIFICATIONS_WEBHOOK"), jsonContent);
 
         }
-
-
     }
+
     public class SearchResult
     {
         public int count { get; set; }
