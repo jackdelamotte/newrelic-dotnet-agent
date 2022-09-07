@@ -15,34 +15,45 @@ namespace nugetSlackNotifications
 
         static async Task Main(string[] args)
         {
-            List<Tuple<string, string>> newVersions = new();
+            List<Tuple<string, string, string>> newVersions = new();
 
             foreach (string package in args)
             {
                 string response = await client.GetStringAsync($"https://api.nuget.org/v3/registration5-semver1/{package}/index.json");
+                response = response.Replace("@", ""); // to be able to deserialize the necessary "@id" parameter successfully
 
                 SearchResult? searchResult = JsonSerializer.Deserialize<SearchResult>(response);
                 if (searchResult is null) continue;
 
                 foreach (Item item in searchResult.items)
                 {
-                    if (item.items is not null)
+                    // need to get the most recent and previous catalog entries
+                    // to display previous and new version
+                    Catalogentry latestCatalogEntry;
+                    Catalogentry previousCatalogEntry;
+
+                    if (item.items is not null) // standard json format from nuget.org
                     {
-                        Catalogentry latestCatalogEntry = item.items[^1].catalogEntry;
-                        if (latestCatalogEntry.published > DateTime.Now.AddDays(-1))
-                            newVersions.Add(new Tuple<string, string>(latestCatalogEntry.id, latestCatalogEntry.version));
+                        latestCatalogEntry = item.items[^1].catalogEntry; // latest release
+                        previousCatalogEntry = item.items[^2].catalogEntry; // next-latest release
                     }
                     else // if item.items is null the json structure is weird and we have to use different properties
                     {
-                        if (item.commitTimeStamp > DateTime.Now.AddDays(-1))
-                            newVersions.Add(new Tuple<string, string>(package, item.upper));
+                        // need to make another request to get the page with individual release listings
+                        Item? page = JsonSerializer.Deserialize<Item>(await client.GetStringAsync(item.id));
+                        if (page is null) continue;
+
+                        latestCatalogEntry = page.items[^1].catalogEntry; // latest release
+                        previousCatalogEntry = page.items[^2].catalogEntry; // next-latest release
                     }
+                    if (latestCatalogEntry.published > DateTime.Now.AddDays(-1))
+                        newVersions.Add(new Tuple<string, string, string>(latestCatalogEntry.id, previousCatalogEntry.version, latestCatalogEntry.version));
                 }
             }
 
             string msg = "Hi team! Dotty here :technologist::pager:\nThere's some new NuGet releases you should know about :arrow_heading_down::sparkles:";
             foreach (var t in newVersions)
-                msg += $"\n\t:package: {char.ToUpper(t.Item1[0]) + t.Item1.Substring(1)} version {t.Item2}";
+                msg += $"\n\t:package: {char.ToUpper(t.Item1[0]) + t.Item1[1..]} {t.Item2} :point_right: {t.Item3}";
             msg += $"\nThanks and have a wonderful {DateTime.Now.DayOfWeek}.";
 
             StringContent jsonContent = new(
@@ -66,6 +77,7 @@ namespace nugetSlackNotifications
 
     public class Item
     {
+        public string id { get; set; }
         public DateTime commitTimeStamp { get; set; }
         public int count { get; set; }
         public Release[] items { get; set; }
@@ -85,6 +97,7 @@ namespace nugetSlackNotifications
         public DateTime published { get; set; }
         public string version { get; set; }
     }
+
 }
 
 #pragma warning restore CS8618
